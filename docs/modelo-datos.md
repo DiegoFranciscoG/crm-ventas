@@ -1,6 +1,6 @@
 # Modelo de datos
 
-Derivado de [investigacion.md](investigacion.md). La columna "Regla / fuente" cita el número de fuente (`#n`) o el supuesto (`Sn`). Motor: PostgreSQL 17. Migraciones: Flyway (`backend/src/main/resources/db/migration`). Datos demo ficticios en `db/demo`, que solo se cargan con `APP_DEMO_DATA=true`.
+Derivado de [investigacion.md](investigacion.md). La columna "Regla / fuente" cita el número de fuente (`#n`) o el supuesto (`Sn`). Motor: PostgreSQL 17. Migraciones: Flyway (`backend/src/main/resources/db/migration`). Datos demo ficticios en `db/demo`, que solo se cargan con el perfil Spring `demo` (`SPRING_PROFILES_ACTIVE=demo`).
 
 Convenciones:
 - Nombres de tablas y columnas en inglés, `snake_case`. PK `bigint GENERATED ALWAYS AS IDENTITY`.
@@ -46,12 +46,12 @@ erDiagram
   }
   COMPANIES {
     bigint id PK
-    char ruc UK
+    varchar ruc UK
     varchar taxpayer_type
     boolean ruc_checksum_verified
     varchar legal_name
-    char province_code FK
-    char industry_code FK
+    varchar province_code FK
+    varchar industry_code FK
     bigint owner_id FK
   }
   CONTACTS {
@@ -113,9 +113,9 @@ erDiagram
 | Tabla | Campo | Tipo | Restricción | Regla / fuente |
 |---|---|---|---|---|
 | `roles` | `code` | varchar(20) | PK: `ADMIN`, `MANAGER`, `SALES_REP` | Enunciado: "el vendedor ve lo suyo, el gerente ve todo" |
-| `provinces` | `code` | char(2) | PK: `01`…`24`, `90` | INEC DPA #6 |
+| `provinces` | `code` | varchar(2) | PK: `01`…`24`, `90` | INEC DPA #6 |
 | `provinces` | `name` | varchar(60) | NOT NULL | #6 |
-| `industries` | `code` | char(1) | PK: `A`…`U` | INEC CIIU Rev. 4.0 #25 |
+| `industries` | `code` | varchar(1) | PK: `A`…`U` | INEC CIIU Rev. 4.0 #25 |
 | `vat_rates` | `code` | varchar(2) | PK: código SRI (0, 2, 3, 4, 5, 6, 7, 8, 10) | SRI Tabla 17 #7 |
 | `vat_rates` | `percentage` | numeric(5,2) | 0 ≤ x ≤ 100 | #7, #8 |
 | `vat_rates` | `active` | boolean | Solo 0, 4, 5, 6 y 7 se pueden usar en ítems nuevos | #8 (15 % vigente), S5 |
@@ -155,13 +155,13 @@ erDiagram
 
 | Tabla | Campo | Tipo | Restricción | Regla / fuente |
 |---|---|---|---|---|
-| `companies` | `ruc` | char(13) | UNIQUE; 13 dígitos; validado por `IdentificationValidator` | #3, #4, #5, #6 |
+| `companies` | `ruc` | varchar(13) | UNIQUE; CHECK de 13 dígitos; validado por `EcuadorianIdValidator` | #3, #4, #5, #6 |
 | `companies` | `taxpayer_type` | varchar(20) | `NATURAL_PERSON` (3.er dígito 0-5), `PUBLIC_ENTITY` (6), `PRIVATE_COMPANY` (9) | #3, #4 |
 | `companies` | `ruc_checksum_verified` | boolean | `false` = estructura válida pero sin verificador aplicable (secuencial de 7 dígitos) | #3; S3 |
 | `companies` | `legal_name` | varchar(300) | NOT NULL (razón social) | SRI #4 |
 | `companies` | `trade_name` | varchar(300) | Opcional (nombre comercial) | — |
-| `companies` | `province_code` | char(2) | FK `provinces` | #6 |
-| `companies` | `industry_code` | char(1) | FK `industries` | #25 |
+| `companies` | `province_code` | varchar(2) | FK `provinces` | #6 |
+| `companies` | `industry_code` | varchar(1) | FK `industries` | #25 |
 | `companies` | `owner_id` | bigint | FK `users`: el vendedor responsable de la cuenta | Enunciado (visibilidad) |
 | `contacts` | `company_id` | bigint | FK `companies` ON DELETE RESTRICT | B2B |
 | `contacts` | `first_name`, `last_name` | varchar(100) | NOT NULL | Minimización #1 Art. 10 e |
