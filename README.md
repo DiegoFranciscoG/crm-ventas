@@ -20,13 +20,19 @@ CRM B2B para empresas ecuatorianas: pipeline kanban, cotizaciones en PDF con IVA
 
 Contraseña de ambos: `Demo-CRM-2026`. La demo gratuita "duerme": la primera carga puede tardar ~1 minuto.
 
-![Pipeline kanban](docs/img/pipeline.png)
+![Pipeline kanban con drag and drop](docs/img/pipeline.png)
 
-| Forecast | Consentimientos y derechos del titular |
+| Forecast de ventas | Cotización con IVA por tarifa |
 |---|---|
-| ![Forecast](docs/img/forecast.png) | ![Contacto LOPDP](docs/img/contacto-lopdp.png) |
-| **Cotización con IVA por tarifa** | **Log de accesos (incluye intentos denegados)** |
-| ![Cotización](docs/img/cotizacion.png) | ![Log de accesos](docs/img/log-accesos.png) |
+| ![Forecast](docs/img/forecast.png) | ![Cotización](docs/img/cotizacion.png) |
+| **RUC validado con las reglas del SRI** (sociedad con secuencial de 7 dígitos) | **Alta de contacto: cédula validada y consentimiento obligatorio** |
+| ![Alta de empresa](docs/img/alta-empresa-ruc.png) | ![Alta de contacto](docs/img/alta-contacto-consentimiento.png) |
+| **Consentimientos por finalidad y derechos del titular** | **Log de accesos, incluidos los intentos denegados** |
+| ![Contacto LOPDP](docs/img/contacto-lopdp.png) | ![Log de accesos](docs/img/log-accesos.png) |
+| **PDF de la cotización (OpenPDF)** | **API documentada con OpenAPI** |
+| ![PDF de la cotización](docs/img/cotizacion-pdf.png) | ![Swagger UI](docs/img/swagger.png) |
+| **Modo oscuro** | **Diseño adaptable (móvil)** |
+| ![Modo oscuro](docs/img/pipeline-oscuro.png) | ![Vista móvil](docs/img/movil-agenda.png) |
 
 ## Problema que resuelve
 
