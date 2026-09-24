@@ -1,0 +1,91 @@
+# Los secretos se leen solo de variables de entorno y NO tienen valor por defecto: sin ellos la app no arranca.
+spring:
+  application:
+    name: crm-ventas-api
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:5}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    locations: ${FLYWAY_LOCATIONS:classpath:db/migration}
+  mail:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+  threads:
+    virtual:
+      enabled: true
+  servlet:
+    multipart:
+      enabled: false
+
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  forward-headers-strategy: framework
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+    whitelabel:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    enabled: ${API_DOCS_ENABLED:true}
+  swagger-ui:
+    enabled: ${API_DOCS_ENABLED:true}
+    path: /swagger-ui.html
+
+app:
+  security:
+    jwt-secret: ${JWT_SECRET}
+    jwt-ttl: ${JWT_TTL:PT30M}
+    cors-allowed-origins: ${CORS_ALLOWED_ORIGINS}
+    login-max-attempts: 5
+    login-window: PT15M
+    cron-token: ${CRON_TOKEN}
+  privacy:
+    data-encryption-key: ${DATA_ENCRYPTION_KEY}
+    request-due-days: 15
+    privacy-notice-version: v1.0
+  mail:
+    provider: ${MAIL_PROVIDER:log}
+    from-address: ${MAIL_FROM:no-reply@example.com}
+    from-name: CRM Ventas
+    brevo-api-key: ${BREVO_API_KEY:}
+    brevo-api-url: https://api.brevo.com/v3/smtp/email
+    frontend-url: ${FRONTEND_URL:http://localhost:4200}
+  seller:
+    legal-name: ${SELLER_LEGAL_NAME:Soluciones Andinas de Software S.A.}
+    ruc: ${SELLER_RUC:2099987335001}
+    address: ${SELLER_ADDRESS:Av. Charles Darwin y Tomás de Berlanga}
+    city: ${SELLER_CITY:Puerto Ayora, Galápagos}
+    phone: ${SELLER_PHONE:05-000-0000}
+    email: ${SELLER_EMAIL:ventas@example.com}
+    quote-validity-days: 30
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN
