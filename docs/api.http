@@ -1,0 +1,132 @@
+### Colección de ejemplos de la API (VS Code REST Client / IntelliJ HTTP Client)
+# 1. Ejecute "Login" y copie el accessToken en @token.
+# 2. La contraseña de los usuarios demo está en el README; no la escriba aquí si usa credenciales reales.
+@baseUrl = http://localhost:8080
+@token = PEGAR_TOKEN
+@password = PEGAR_CONTRASENA
+
+### Login (gerente demo)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{"email": "gerente@example.com", "password": "{{password}}"}
+
+### Perfil actual
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Catálogos oficiales (provincias INEC, CIIU, IVA SRI, etapas, finalidades LOPDP)
+GET {{baseUrl}}/api/catalogs
+Authorization: Bearer {{token}}
+
+### Validar un RUC (sociedad con secuencial de 7 dígitos: válido sin módulo 11)
+POST {{baseUrl}}/api/validation/identification
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"type": "RUC", "number": "2299981235001"}
+
+### Empresas (paginado; el vendedor solo ve las suyas)
+GET {{baseUrl}}/api/companies?search=insular&page=0&size=20
+Authorization: Bearer {{token}}
+
+### Crear empresa
+POST {{baseUrl}}/api/companies
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "ruc": "2099987335001",
+  "legalName": "Empresa Ejemplo S.A.",
+  "tradeName": "Ejemplo",
+  "industryCode": "J",
+  "provinceCode": "20",
+  "city": "Puerto Ayora",
+  "email": "info@ejemplo.example.com"
+}
+
+### Crear contacto con consentimiento inicial (obligatorio)
+POST {{baseUrl}}/api/contacts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "companyId": 1,
+  "firstName": "Carla",
+  "lastName": "Ejemplo",
+  "email": "carla.ejemplo@example.com",
+  "dataSource": "DIRECT",
+  "initialConsent": {
+    "purposeCode": "COMMERCIAL_CONTACT",
+    "channel": "WEB_FORM",
+    "evidence": "Formulario web con aviso de privacidad v1.0 (registro EJ-001)"
+  }
+}
+
+### Registrar consentimiento para envío de cotizaciones
+POST {{baseUrl}}/api/contacts/1/consents
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"purposeCode": "QUOTE_DELIVERY", "channel": "EMAIL", "evidence": "Correo de solicitud de cotización archivado"}
+
+### Revocar un consentimiento (sin justificación obligatoria)
+POST {{baseUrl}}/api/contacts/1/consents/3/revoke
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"reason": ""}
+
+### Derecho de acceso y portabilidad: exportar datos del contacto (gerente/administrador)
+POST {{baseUrl}}/api/contacts/1/export
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"channel": "EMAIL", "notes": "Solicitud recibida por correo"}
+
+### Derecho de eliminación (gerente/administrador)
+POST {{baseUrl}}/api/contacts/2/erasure
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"channel": "LETTER"}
+
+### Tablero kanban
+GET {{baseUrl}}/api/opportunities/board
+Authorization: Bearer {{token}}
+
+### Mover una oportunidad de etapa (versión para bloqueo optimista)
+PATCH {{baseUrl}}/api/opportunities/1/stage
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"stageCode": "NEGOTIATION", "version": 0}
+
+### Crear cotización (los totales los calcula el servidor)
+POST {{baseUrl}}/api/quotes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "opportunityId": 1,
+  "items": [
+    {"productId": 1, "quantity": 5, "discountPercent": 10},
+    {"description": "Servicio adicional", "quantity": 1, "unitPrice": 250.00, "vatRateCode": "4"}
+  ]
+}
+
+### Descargar la cotización en PDF
+GET {{baseUrl}}/api/quotes/1/pdf
+Authorization: Bearer {{token}}
+
+### Forecast del período
+GET {{baseUrl}}/api/forecast?from=2026-09-01&to=2026-12-31
+Authorization: Bearer {{token}}
+
+### Log de accesos a datos personales (gerente/administrador)
+GET {{baseUrl}}/api/privacy/access-log?resourceType=CONTACT&onlyDenied=false
+Authorization: Bearer {{token}}
+
+### Registro de solicitudes de derechos
+GET {{baseUrl}}/api/privacy/requests
+Authorization: Bearer {{token}}
