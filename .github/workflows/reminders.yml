@@ -1,0 +1,25 @@
+name: Recordatorios
+
+# Render free suspende la API tras 15 min sin tráfico; este cron la despierta y despacha los recordatorios vencidos.
+# Horario laboral de Ecuador (UTC-5): 08:00 a 20:00, de lunes a viernes.
+on:
+  schedule:
+    - cron: '0 13-23 * * 1-5'
+    - cron: '0 0-1 * * 2-6'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  dispatch:
+    name: Despachar recordatorios
+    runs-on: ubuntu-24.04
+    if: ${{ vars.API_URL != '' }}
+    steps:
+      - name: POST /api/internal/reminders/dispatch
+        env:
+          API_URL: ${{ vars.API_URL }}
+          CRON_TOKEN: ${{ secrets.CRON_TOKEN }}
+        run: |
+          curl --fail --silent --show-error --retry 4 --retry-delay 30 --retry-all-errors --max-time 120 \
+            -X POST "$API_URL/api/internal/reminders/dispatch" -H "X-Cron-Token: $CRON_TOKEN"
