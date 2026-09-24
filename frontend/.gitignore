@@ -1,0 +1,10 @@
+# Salidas de build y caché de Angular
+/dist
+/tmp
+/out-tsc
+/.angular/cache
+/coverage
+__screenshots__/
+# Dependencias
+/node_modules
+npm-debug.log

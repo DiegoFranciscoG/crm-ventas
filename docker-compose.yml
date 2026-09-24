@@ -1,0 +1,64 @@
+# Levanta todo en local con datos demo: docker compose up --build
+# Antes: ./scripts/init-env.sh (genera .env con secretos aleatorios). Sin .env, compose se detiene.
+name: crm-ventas
+
+services:
+  db:
+    image: postgres:17.11-alpine
+    environment:
+      POSTGRES_DB: crm
+      POSTGRES_USER: ${DB_USER:?Define DB_USER en .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d crm"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit:v1.31.2
+    ports:
+      - "127.0.0.1:${MAIL_UI_HOST_PORT:-8025}:8025"
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    image: crm-ventas-backend:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      DB_URL: jdbc:postgresql://db:5432/crm
+      DB_USER: ${DB_USER:?Define DB_USER en .env}
+      DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET en .env}
+      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY:?Define DATA_ENCRYPTION_KEY en .env}
+      CRON_TOKEN: ${CRON_TOKEN:?Define CRON_TOKEN en .env}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:8081,http://localhost:4200}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      MAIL_PROVIDER: smtp
+      MAIL_FROM: ${MAIL_FROM:-no-reply@example.com}
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      FRONTEND_URL: http://localhost:8081
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${API_HOST_PORT:-8080}:8080"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    image: crm-ventas-frontend:1.0.0
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${WEB_HOST_PORT:-8081}:8080"
+    restart: unless-stopped
+
+volumes:
+  db-data:

@@ -17,7 +17,7 @@ spring:
         jdbc:
           time_zone: UTC
   flyway:
-    locations: ${FLYWAY_LOCATIONS:classpath:db/migration}
+    locations: classpath:db/migration
   mail:
     host: ${SMTP_HOST:localhost}
     port: ${SMTP_PORT:1025}

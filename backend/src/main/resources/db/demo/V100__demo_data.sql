@@ -1,4 +1,4 @@
--- Datos de demostración 100 % FICTICIOS. Solo se cargan con APP_DEMO_DATA=true (FLYWAY_LOCATIONS incluye db/demo).
+-- Datos de demostración 100 % FICTICIOS. Solo se cargan con el perfil Spring "demo" (SPRING_PROFILES_ACTIVE=demo).
 -- - Correos en example.com (RFC 2606, investigación #18): el sistema nunca envía correos reales a ese dominio.
 -- - RUC sintéticos de sociedades en rangos altos de provincias pequeñas, para minimizar la colisión con RUC reales.
 --   No hay RUC de personas naturales ni cédulas (LOPDP: no exponer identificaciones de personas en demos).

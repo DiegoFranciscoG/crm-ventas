@@ -1,0 +1,5 @@
+# Perfil "demo": agrega los datos ficticios de db/demo (usuarios, empresas, contactos, pipeline y cotizaciones).
+# Actívelo con SPRING_PROFILES_ACTIVE=demo. Nunca en una instalación con datos reales.
+spring:
+  flyway:
+    locations: classpath:db/migration,classpath:db/demo

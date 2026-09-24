@@ -44,6 +44,8 @@ public class QuotePdfRenderer {
     private static final Font SMALL = new Font(Font.HELVETICA, 7.5f, Font.NORMAL, Color.DARK_GRAY);
     private static final Font TOTAL = new Font(Font.HELVETICA, 11, Font.BOLD, PRIMARY);
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    /** Mismo formato que la interfaz (CLDR es-EC): 1.234,56. */
+    private static final Locale ECUADOR = Locale.forLanguageTag("es-EC");
 
     private final SellerProperties seller;
 
@@ -202,6 +204,6 @@ public class QuotePdfRenderer {
     }
 
     private static String number(BigDecimal value) {
-        return new DecimalFormat("#,##0.00", DecimalFormatSymbols.getInstance(Locale.US)).format(value);
+        return new DecimalFormat("#,##0.00", DecimalFormatSymbols.getInstance(ECUADOR)).format(value);
     }
 }
