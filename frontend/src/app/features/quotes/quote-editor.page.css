@@ -1,0 +1,45 @@
+fieldset {
+  min-width: 0;
+  margin: 0;
+}
+
+fieldset:disabled input,
+fieldset:disabled select,
+fieldset:disabled textarea {
+  background: var(--surface-2);
+}
+
+.items td {
+  vertical-align: top;
+}
+
+.items .desc {
+  display: grid;
+  gap: 4px;
+  min-width: 260px;
+}
+
+.num-input {
+  width: 96px;
+  text-align: right;
+}
+
+.totals {
+  display: grid;
+  gap: 4px;
+  width: min(360px, 100%);
+  margin: 12px 0 0 auto;
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.totals .grand {
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
