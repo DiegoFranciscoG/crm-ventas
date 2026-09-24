@@ -1,0 +1,32 @@
+# ---- Secretos y entorno
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+# ---- Java / Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.log
+hs_err_pid*
+# ---- Node / Angular
+node_modules/
+dist/
+.angular/
+coverage/
+npm-debug.log*
+test-results/
+playwright-report/
+blob-report/
+# ---- IDE / SO
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
