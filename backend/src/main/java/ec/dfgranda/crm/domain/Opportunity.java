@@ -1,5 +1,6 @@
 package ec.dfgranda.crm.domain;
 
+import ec.dfgranda.crm.exception.BusinessRuleException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -88,7 +89,7 @@ public class Opportunity extends TimestampedEntity {
      */
     public void moveTo(PipelineStage target, String reasonIfLost, Instant now) {
         if (target.isLost() && (reasonIfLost == null || reasonIfLost.isBlank())) {
-            throw new IllegalArgumentException("Para marcar una oportunidad como perdida indique el motivo.");
+            throw new BusinessRuleException("Para marcar una oportunidad como perdida indique el motivo.");
         }
         this.stage = target;
         this.probability = target.getDefaultProbability();
@@ -99,10 +100,10 @@ public class Opportunity extends TimestampedEntity {
     /** La probabilidad solo se ajusta a mano en etapas abiertas; en etapas cerradas es 100 o 0. */
     public void adjustProbability(int newProbability) {
         if (stage.isClosed()) {
-            throw new IllegalStateException("No se puede cambiar la probabilidad de una oportunidad cerrada.");
+            throw new BusinessRuleException("No se puede cambiar la probabilidad de una oportunidad cerrada.");
         }
         if (newProbability < 0 || newProbability > 100) {
-            throw new IllegalArgumentException("La probabilidad debe estar entre 0 y 100.");
+            throw new BusinessRuleException("La probabilidad debe estar entre 0 y 100.");
         }
         this.probability = newProbability;
     }

@@ -1,5 +1,6 @@
 package ec.dfgranda.crm.domain;
 
+import ec.dfgranda.crm.exception.BusinessRuleException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -77,7 +78,7 @@ public class Activity extends TimestampedEntity {
 
     public void schedule(Instant dueAt, Instant remindAt) {
         if (remindAt != null && dueAt != null && remindAt.isAfter(dueAt)) {
-            throw new IllegalArgumentException("El recordatorio debe ser anterior o igual a la fecha de la actividad.");
+            throw new BusinessRuleException("El recordatorio debe ser anterior o igual a la fecha de la actividad.");
         }
         boolean reminderChanged = remindAt == null ? this.remindAt != null : !remindAt.equals(this.remindAt);
         this.dueAt = dueAt;

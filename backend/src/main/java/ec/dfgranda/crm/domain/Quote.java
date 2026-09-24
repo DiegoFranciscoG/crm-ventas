@@ -1,5 +1,6 @@
 package ec.dfgranda.crm.domain;
 
+import ec.dfgranda.crm.exception.BusinessRuleException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -81,7 +82,7 @@ public class Quote extends TimestampedEntity {
 
     public Quote(String number, Opportunity opportunity, LocalDate issueDate, LocalDate validUntil, User createdBy) {
         if (validUntil.isBefore(issueDate)) {
-            throw new IllegalArgumentException("La validez de la cotización no puede ser anterior a su emisión.");
+            throw new BusinessRuleException("La validez de la cotización no puede ser anterior a su emisión.");
         }
         this.number = number;
         this.opportunity = opportunity;
@@ -124,7 +125,7 @@ public class Quote extends TimestampedEntity {
 
     public void changeValidity(LocalDate issueDate, LocalDate validUntil) {
         if (validUntil.isBefore(issueDate)) {
-            throw new IllegalArgumentException("La validez de la cotización no puede ser anterior a su emisión.");
+            throw new BusinessRuleException("La validez de la cotización no puede ser anterior a su emisión.");
         }
         this.issueDate = issueDate;
         this.validUntil = validUntil;
