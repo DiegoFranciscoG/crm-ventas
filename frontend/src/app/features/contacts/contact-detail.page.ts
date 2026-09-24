@@ -263,10 +263,13 @@ export class ContactDetailPage implements OnInit {
 
   private load(): void {
     const id = Number(this.id());
-    this.api.contact(id).subscribe((c) => this.contact.set(c));
-    if (this.auth.isManager()) {
-      this.api.accessLog({ resourceType: 'CONTACT', resourceId: id, size: 50 }).subscribe((p) => this.accessLog.set(p.content));
-    }
+    this.api.contact(id).subscribe((c) => {
+      this.contact.set(c);
+      // Después de cargar el contacto, para que el log ya incluya esta consulta.
+      if (this.auth.isManager()) {
+        this.api.accessLog({ resourceType: 'CONTACT', resourceId: id, size: 50 }).subscribe((p) => this.accessLog.set(p.content));
+      }
+    });
   }
 
   protected err(name: string): string | null {

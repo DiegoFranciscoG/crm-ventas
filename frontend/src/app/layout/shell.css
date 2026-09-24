@@ -2,6 +2,8 @@
   display: grid;
   grid-template-columns: 232px 1fr;
   min-height: 100vh;
+  /* El fondo de la columna lateral se extiende aunque el contenido sea más alto que la ventana. */
+  background: linear-gradient(to right, var(--surface) 231px, var(--border) 231px, var(--border) 232px, transparent 232px);
 }
 
 .sidebar {
@@ -94,6 +96,7 @@ nav a.active {
 @media (max-width: 900px) {
   .shell {
     grid-template-columns: 1fr;
+    background: none;
   }
 
   .sidebar {

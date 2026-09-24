@@ -57,10 +57,11 @@ interface PendingLoss {
                 <div class="row">
                   <h2>{{ column.stage.name }}</h2>
                   <span class="badge">{{ column.opportunities.length }}</span>
-                  <span class="spacer"></span>
-                  <span class="badge badge-accent" title="Probabilidad por defecto">{{ column.stage.defaultProbability }} %</span>
                 </div>
-                <span class="small muted">{{ columnTotal(column) | currency }} · pond. {{ columnWeighted(column) | currency }}</span>
+                <span class="small muted">
+                  <span class="badge badge-accent" title="Probabilidad por defecto de la etapa">{{ column.stage.defaultProbability }} %</span>
+                  {{ columnTotal(column) | currency }} · pond. {{ columnWeighted(column) | currency }}
+                </span>
               </header>
               <div
                 class="cards"
