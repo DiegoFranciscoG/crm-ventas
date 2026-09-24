@@ -16,5 +16,7 @@ public abstract class IntegrationTest {
         registry.add("app.security.cron-token", () -> TestSecrets.CRON);
         registry.add("app.security.cors-allowed-origins", () -> "http://localhost:4200");
         registry.add("app.privacy.data-encryption-key", () -> TestSecrets.DATA_KEY);
+        // Los datos demo también se migran en los tests: así se valida que los seeds cargan sin errores.
+        registry.add("spring.flyway.locations", () -> "classpath:db/migration,classpath:db/demo");
     }
 }

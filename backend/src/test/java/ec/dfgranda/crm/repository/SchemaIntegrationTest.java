@@ -6,6 +6,7 @@ import ec.dfgranda.crm.domain.ContactSource;
 import ec.dfgranda.crm.domain.Role;
 import ec.dfgranda.crm.domain.User;
 import ec.dfgranda.crm.support.IntegrationTest;
+import ec.dfgranda.crm.support.TestIds;
 import ec.dfgranda.crm.validation.TaxpayerType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,22 @@ class SchemaIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void loadsConsistentDemoData() {
+        assertThat(count("companies")).isGreaterThanOrEqualTo(10);
+        assertThat(jdbc.queryForObject(
+                "select count(*) from companies where taxpayer_type = 'NATURAL_PERSON'", Integer.class))
+                .as("la demo no expone RUC de personas naturales").isZero();
+        assertThat(jdbc.queryForObject(
+                "select count(*) from contacts where email not like '%@example.com'", Integer.class))
+                .as("todos los correos demo usan el dominio reservado example.com").isZero();
+        // Los totales sembrados coinciden con la suma de sus ítems.
+        assertThat(jdbc.queryForObject("""
+                select count(*) from quotes q
+                where q.total <> (select sum(i.line_total) from quote_items i where i.quote_id = q.id)
+                """, Integer.class)).isZero();
+    }
+
+    @Test
     void accessAuditLogIsAppendOnly() {
         User user = users.save(new User("audit-" + System.nanoTime() + "@example.com", "Auditor", "x", Role.ADMIN));
         jdbc.update("insert into access_audit_log (user_id, action, resource_type, resource_id, success) values (?, 'VIEW', 'CONTACT', 1, true)",
@@ -56,7 +73,7 @@ class SchemaIntegrationTest extends IntegrationTest {
     @Test
     void storesNationalIdEncryptedAtRest() {
         User owner = users.save(new User("owner-" + System.nanoTime() + "@example.com", "Owner", "x", Role.SALES_REP));
-        Company company = new Company("2099998701001", TaxpayerType.PRIVATE_COMPANY, true, owner);
+        Company company = new Company(TestIds.uniquePrivateRuc(), TaxpayerType.PRIVATE_COMPANY, true, owner);
         company.setLegalName("Empresa de prueba S.A.");
         company.setProvince(provinces.findById("20").orElseThrow());
         company = companies.save(company);
