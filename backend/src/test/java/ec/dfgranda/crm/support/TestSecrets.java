@@ -11,6 +11,7 @@ public final class TestSecrets {
     public static final String JWT = randomBase64(48);
     public static final String CRON = randomBase64(48);
     public static final String DATA_KEY = randomBase64(32);
+    public static final String ADMIN_PASSWORD = randomBase64(24);
 
     private TestSecrets() {
     }

@@ -31,7 +31,7 @@ spring:
 server:
   port: ${PORT:8080}
   shutdown: graceful
-  forward-headers-strategy: framework
+  forward-headers-strategy: native
   error:
     include-stacktrace: never
     include-message: never
@@ -40,6 +40,10 @@ server:
       enabled: false
 
 management:
+  health:
+    # El correo puede ir por API HTTPS (Brevo); un SMTP caído no debe marcar la API como no disponible.
+    mail:
+      enabled: false
   endpoints:
     web:
       exposure:

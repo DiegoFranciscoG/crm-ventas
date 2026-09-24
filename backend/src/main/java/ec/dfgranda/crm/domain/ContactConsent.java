@@ -1,5 +1,6 @@
 package ec.dfgranda.crm.domain;
 
+import ec.dfgranda.crm.exception.BusinessRuleException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -87,7 +88,7 @@ public class ContactConsent {
 
     public void revoke(Instant when, String reason) {
         if (revokedAt != null) {
-            throw new IllegalStateException("El consentimiento ya fue revocado.");
+            throw new BusinessRuleException("El consentimiento ya fue revocado.");
         }
         this.revokedAt = when;
         this.revocationReason = reason;

@@ -1,5 +1,6 @@
 package ec.dfgranda.crm.domain;
 
+import ec.dfgranda.crm.exception.BusinessRuleException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -81,13 +82,13 @@ public class QuoteItem {
     public QuoteItem(Product product, String description, BigDecimal quantity, BigDecimal unitPrice,
                      BigDecimal discountPercent, VatRate vatRate) {
         if (quantity.signum() <= 0) {
-            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+            throw new BusinessRuleException("La cantidad debe ser mayor que cero.");
         }
         if (unitPrice.signum() < 0) {
-            throw new IllegalArgumentException("El precio unitario no puede ser negativo.");
+            throw new BusinessRuleException("El precio unitario no puede ser negativo.");
         }
         if (discountPercent.signum() < 0 || discountPercent.compareTo(HUNDRED) > 0) {
-            throw new IllegalArgumentException("El descuento debe estar entre 0 y 100 %.");
+            throw new BusinessRuleException("El descuento debe estar entre 0 y 100 %.");
         }
         this.product = product;
         this.description = description;
