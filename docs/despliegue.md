@@ -8,7 +8,7 @@
 | Correo | **Brevo** (API HTTPS) | Free | 300 correos/día tras la aprobación de la cuenta (#15, #16) |
 | Recordatorios | **GitHub Actions** (cron) | Gratis en repos públicos | Cada hora en horario laboral; GitHub pausa los cron tras 60 días sin actividad en el repo |
 
-Ninguno de estos pasos requiere tarjeta de crédito según las páginas de planes consultadas. Si alguno la pidiera al registrarse, deténgase y revíselo antes de continuar.
+Las páginas de planes consultadas no mencionan tarjeta de crédito para estos niveles gratuitos. Si algún servicio la pide al registrarse, deténgase y revíselo antes de continuar.
 
 ```mermaid
 flowchart LR
