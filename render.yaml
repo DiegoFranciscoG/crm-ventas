@@ -1,0 +1,47 @@
+# Blueprint de Render: API en el plan free (docker). La base de datos vive en Neon (Render Postgres free expira a los 30 días).
+# Guía completa: docs/despliegue.md
+services:
+  - type: web
+    name: crm-ventas-api
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /actuator/health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: demo
+      # Conexión directa (no pooled) de Neon: jdbc:postgresql://<host>/<db>?sslmode=require
+      - key: DB_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_POOL_SIZE
+        value: "3"
+      # Render genera valores aleatorios de 256 bits en Base64: cumplen HS256 (≥ 256 bits) y AES-256.
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATA_ENCRYPTION_KEY
+        generateValue: true
+      - key: CRON_TOKEN
+        generateValue: true
+      # URL del frontend en Vercel, p. ej. https://crm-ventas.vercel.app
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      # "log" hasta configurar Brevo; luego "brevo" + BREVO_API_KEY + MAIL_FROM verificado.
+      - key: MAIL_PROVIDER
+        value: log
+      - key: MAIL_FROM
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
