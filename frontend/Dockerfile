@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # ---- Etapa 1: build de Angular
-FROM node:24.21.0-alpine AS build
+FROM node:26.10.0-alpine AS build
 WORKDIR /build
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
