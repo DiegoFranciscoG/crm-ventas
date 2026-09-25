@@ -1,7 +1,4 @@
 target/
-.mvn/
-mvnw
-mvnw.cmd
 *.log
 .env
 .env.*
