@@ -10,7 +10,6 @@
 *.keystore
 # ---- Java / Maven
 target/
-!.mvn/wrapper/maven-wrapper.jar
 *.class
 *.log
 hs_err_pid*

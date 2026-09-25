@@ -20,13 +20,19 @@ CRM B2B para empresas ecuatorianas: pipeline kanban, cotizaciones en PDF con IVA
 
 Contraseña de ambos: `Demo-CRM-2026`. La demo gratuita "duerme": la primera carga puede tardar ~1 minuto.
 
-![Pipeline kanban](docs/img/pipeline.png)
+![Pipeline kanban con drag and drop](docs/img/pipeline.png)
 
-| Forecast | Consentimientos y derechos del titular |
+| Forecast de ventas | Cotización con IVA por tarifa |
 |---|---|
-| ![Forecast](docs/img/forecast.png) | ![Contacto LOPDP](docs/img/contacto-lopdp.png) |
-| **Cotización con IVA por tarifa** | **Log de accesos (incluye intentos denegados)** |
-| ![Cotización](docs/img/cotizacion.png) | ![Log de accesos](docs/img/log-accesos.png) |
+| ![Forecast](docs/img/forecast.png) | ![Cotización](docs/img/cotizacion.png) |
+| **RUC validado con las reglas del SRI** (sociedad con secuencial de 7 dígitos) | **Alta de contacto: cédula validada y consentimiento obligatorio** |
+| ![Alta de empresa](docs/img/alta-empresa-ruc.png) | ![Alta de contacto](docs/img/alta-contacto-consentimiento.png) |
+| **Consentimientos por finalidad y derechos del titular** | **Log de accesos, incluidos los intentos denegados** |
+| ![Contacto LOPDP](docs/img/contacto-lopdp.png) | ![Log de accesos](docs/img/log-accesos.png) |
+| **PDF de la cotización (OpenPDF)** | **API documentada con OpenAPI** |
+| ![PDF de la cotización](docs/img/cotizacion-pdf.png) | ![Swagger UI](docs/img/swagger.png) |
+| **Modo oscuro** | **Diseño adaptable (móvil)** |
+| ![Modo oscuro](docs/img/pipeline-oscuro.png) | ![Vista móvil](docs/img/movil-agenda.png) |
 
 ## Problema que resuelve
 
@@ -125,11 +131,11 @@ Si esos puertos están ocupados, defina `API_HOST_PORT`, `WEB_HOST_PORT` o `MAIL
 
 ### Sin Docker
 
-Requisitos: JDK 25+, Node 24 LTS y PostgreSQL 17 local con una base `crm`.
+Requisitos: JDK 25+, Maven 3.9+, Node 24 LTS y PostgreSQL 17 local con una base `crm`.
 
 ```bash
 # API (exporte primero las variables de .env.example; SPRING_PROFILES_ACTIVE=demo carga los datos demo)
-cd backend && ./mvnw spring-boot:run
+cd backend && mvn spring-boot:run
 
 # Web (proxy /api -> localhost:8080)
 cd frontend && npm ci && npm start    # http://localhost:4200
@@ -179,7 +185,7 @@ Documentación interactiva: `http://localhost:8080/swagger-ui.html`. Ejemplos li
 ## Tests y cobertura
 
 ```bash
-cd backend && ./mvnw verify                 # 98 tests: unitarios + integración (Testcontainers) + JaCoCo ≥ 70 %
+cd backend && mvn verify                   # 98 tests: unitarios + integración (Testcontainers) + JaCoCo ≥ 70 %
 cd frontend && npm test -- --watch=false    # 15 tests Vitest
 cd frontend && npx playwright test          # 5 e2e contra docker compose (E2E_BASE_URL)
 ```
@@ -214,7 +220,7 @@ Pasos detallados en [docs/despliegue.md](docs/despliegue.md).
 - **Validación** con Bean Validation en todos los DTOs; los totales de cotizaciones los calcula siempre el servidor, sin *mass assignment*. Solo SQL parametrizado (JPA y Specifications).
 - **Errores** como ProblemDetail, sin trazas; los 500 llevan un ID de incidente. Actuator expone solo `health`.
 - **Cabeceras**: CSP estricta (sin scripts inline; *critical CSS inlining* desactivado por eso), HSTS, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, `Permissions-Policy`.
-- **Docker**: imágenes multi-stage con versión fija, usuario no root y healthcheck. **CI**: gitleaks sobre todo el historial, acciones fijadas por SHA, `permissions: contents: read`. El wrapper de Maven verifica el SHA-256 de la distribución. Dependabot activo.
+- **Docker**: imágenes multi-stage con versión fija, usuario no root y healthcheck. **CI**: gitleaks sobre todo el historial, acciones fijadas por SHA, `permissions: contents: read`. Dependabot activo.
 - **LOPDP**: consentimiento por finalidad con evidencia, derechos del titular en 15 días con registro de solicitudes, minimización (enmascaramiento), datos demo ficticios y ningún correo real a dominios de ejemplo.
 
 ## Decisiones técnicas
