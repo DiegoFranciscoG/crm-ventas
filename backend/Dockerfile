@@ -9,7 +9,7 @@ RUN mvn -B -ntp package -DskipTests -Djacoco.skip=true \
     && java -Djarmode=tools -jar target/crm-ventas-api-1.0.0.jar extract --layers --launcher --destination extracted
 
 # ---- Etapa 2: ejecución con JRE mínimo y usuario sin privilegios
-FROM eclipse-temurin:25.0.4_7-jre-alpine
+FROM eclipse-temurin:26.0.2.1_1-jre-alpine
 RUN addgroup -S app && adduser -S -G app -H -s /sbin/nologin app
 WORKDIR /app
 # Capas de Spring Boot: las dependencias cambian poco y se reutilizan entre builds.
