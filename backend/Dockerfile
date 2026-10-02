@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # ---- Etapa 1: compilación (los tests corren en CI con Testcontainers, no dentro de la imagen)
-FROM maven:3.9.15-eclipse-temurin-25-alpine AS build
+FROM maven:3-eclipse-temurin-24-alpine AS build
 WORKDIR /build
 COPY pom.xml .
 RUN mvn -B -ntp dependency:go-offline
