@@ -20,7 +20,7 @@
         <java.version>25</java.version>
         <openpdf.version>3.0.5</openpdf.version>
         <springdoc.version>3.1.1</springdoc.version>
-        <jacoco.version>0.8.15</jacoco.version>
+        <jacoco.version>0.8.16</jacoco.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
